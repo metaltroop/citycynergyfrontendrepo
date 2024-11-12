@@ -37,7 +37,7 @@ export const TenderDashboard = () => {
 
   const handleSearchAndFilter = async () => {
     try {
-      const response = await axios.post("https://citysynergybackend.onrender.com/tenders/filter", {
+      const response = await axios.post("https://citysynergybackend.onrender.com/tender/tenders/filter", {
         search_by: searchBy,
         search_term: searchTerm,
         filter_columns: filterColumns,
