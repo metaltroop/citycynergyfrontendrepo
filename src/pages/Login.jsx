@@ -1,3 +1,4 @@
+// Login.jsx
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import mhlogo from "../assets/mhgovlogo.png";
@@ -32,7 +33,7 @@ export const Login = () => {
       });
       
       localStorage.setItem("token", response.data.token);
-      navigate("/"); // Navigate to dashboard or home page after login
+      navigate("/dashboard"); // Navigate to dashboard or home page after login
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
     }
@@ -44,7 +45,7 @@ export const Login = () => {
 
   return (
     <div className="bg-white flex items-center justify-center w-full h-screen relative">
-      <img src="https://cdn.metaltroop.fun/loginboy.png" className="absolute z-0 4xl:-translate-x-[70%] 3xl:-translate-x-[60%] 2xl:-translate-x-[50%] xl:-translate-x-[45%] -translate-x-[100%] -translate-y-20" alt="" />
+      <img src="./loginboy.png" className="absolute z-0 4xl:-translate-x-[70%] 3xl:-translate-x-[60%] 2xl:-translate-x-[50%] xl:-translate-x-[45%] -translate-x-[100%] -translate-y-20" alt="" />
       <div className="bg-[#f5f5f5] 2xl:w-1/4 xl:w-1/4 2xl:h-[85%] xl:h-3/4 w-full h-full p-5 rounded-2xl shadow-xl z-10">
         <div className="p-2">
           <div className="flex justify-end mb-4">

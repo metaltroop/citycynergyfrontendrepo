@@ -1,3 +1,4 @@
+// Register.jsx
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons
