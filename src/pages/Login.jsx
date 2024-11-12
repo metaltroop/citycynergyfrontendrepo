@@ -107,11 +107,7 @@ export const Login = () => {
               </label>
             </div>
 
-            <ReCAPTCHA
-              sitekey={import.meta.env.VITE_SITE_KEY}
-              onChange={onCaptchaChange}
-              ref={recaptcha}
-            />
+            
             
             <button
               type="submit"
@@ -119,6 +115,14 @@ export const Login = () => {
             >
               LOGIN
             </button>
+            <div className="flex items-center justify-center">
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_SITE_KEY}
+                onChange={onCaptchaChange}
+                ref={recaptcha}
+              
+              />
+            </div>
             {error && <p className="text-red-500">{error}</p>}
           </form>
         </div>

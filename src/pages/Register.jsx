@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons
-
+import ReCAPTCHA from "react-google-recaptcha";
 import mhlogo from "../assets/mhgovlogo.png";
 import axios from "axios";
 
@@ -16,6 +16,10 @@ export const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const navigate = useNavigate();
+  const [captchaToken, setCaptchaToken] = useState(null);
+
+  const recaptcha = useRef(null);
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -25,16 +29,25 @@ export const Register = () => {
       return;
     }
 
+    if (!captchaToken) {
+      setError("Please complete the reCAPTCHA");
+      return;
+    }
+
     try {
       await axios.post("https://citysynergybackend.onrender.com/auth/register", {
         email,
         password,
         confirmPassword,
+        captchaToken
       });
       navigate("/login"); // Redirect to login page after successful registration
     } catch (err) {
       setError(err.response?.data?.error || "Registration failed");
     }
+  };
+  const onCaptchaChange = (token) => {
+    setCaptchaToken(token);
   };
 
   return (
@@ -153,9 +166,17 @@ export const Register = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-
+            <div className="flex items-center justify-center">
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_SITE_KEY}
+                onChange={onCaptchaChange}
+                ref={recaptcha}
+              
+              />
+              </div>
             {/* Display error if passwords do not match */}
             {error && <p className="text-red-500 mb-4">{error}</p>}
+
 
             <button
               type="submit"
