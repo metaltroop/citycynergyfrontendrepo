@@ -82,18 +82,18 @@ export const TenderDashboard = () => {
   const currentTenders = tenders.slice(indexOfFirstTender, indexOfLastTender);
 
   return (
-    <div className="container mx-auto p-5 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-semibold text-center text-blue-600 mb-5">Tender Dashboard</h1>
+    <div className="container mx-auto p-3 md:p-5 bg-gray-100 min-h-screen">
+      <h1 className="text-xl md:text-3xl font-semibold text-center text-blue-600 mb-3 md:mb-5">Tender Dashboard</h1>
 
       {error && <p className="text-red-500 text-center">{error}</p>}
 
-      <div className="flex flex-row gap-3">
-        <div className="">
-          <div className="bg-white p-5 rounded-md shadow-md mb-5">
-            <h2 className="text-2xl font-semibold mb-3">Search & Filter Tenders</h2>
+      <div className="flex flex-col lg:flex-row gap-3">
+        <div className="w-full lg:w-2/3">
+          <div className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5">
+            <h2 className="text-lg md:text-2xl font-semibold mb-3">Search & Filter Tenders</h2>
 
             <div className="flex flex-col space-y-3">
-              <div className="flex space-x-2">
+              <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
                 <select
                   value={searchBy}
                   onChange={(e) => setSearchBy(e.target.value)}
@@ -146,55 +146,57 @@ export const TenderDashboard = () => {
                     </div>
                   ))}
                 </div>
-                <p className="mt-2 text-gray-500">You can select up to 5 columns to display in the table.</p>
+                <p className="mt-2 text-gray-500 text-sm">You can select up to 5 columns to display in the table.</p>
               </div>
             </div>
             <button
               onClick={handleSearchAndFilter}
-              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 mt-3"
+              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 mt-3 w-full md:w-auto"
             >
               Search & Filter
             </button>
           </div>
           
-          <div className="bg-white p-5 rounded-md shadow-md mb-5">
-            <h2 className="text-2xl font-semibold mb-3">Tenders List</h2>
-            <table className="table-auto w-full text-left">
-              <thead>
-                <tr>
-                  {filterColumns.map((column) => (
-                    <th key={column} className="px-4 py-2">
-                      {column.replace(/_/g, " ")}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentTenders.map((tender) => (
-                  <tr key={tender.Tender_ID}>
+          <div className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5">
+            <h2 className="text-lg md:text-2xl font-semibold mb-3">Tenders List</h2>
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full text-left">
+                <thead>
+                  <tr>
                     {filterColumns.map((column) => (
-                      <td key={`${tender.Tender_ID}-${column}`} className="border px-4 py-2">
-                        {tender[column]}
-                      </td>
+                      <th key={column} className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                        {column.replace(/_/g, " ")}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentTenders.map((tender) => (
+                    <tr key={tender.Tender_ID}>
+                      {filterColumns.map((column) => (
+                        <td key={`${tender.Tender_ID}-${column}`} className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                          {tender[column]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             
             <div className="flex justify-between items-center mt-4">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 text-xs md:text-sm"
               >
                 Previous
               </button>
-              <span>Page {currentPage}</span>
+              <span className="text-xs md:text-base">Page {currentPage}</span>
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={indexOfLastTender >= tenders.length}
-                className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 text-xs md:text-sm"
               >
                 Next
               </button>
@@ -202,9 +204,9 @@ export const TenderDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-md shadow-md mb-5">
-          <h2 className="text-2xl font-semibold mb-3">Check Clashes</h2>
-          <div className="flex space-x-2">
+        <div className="bg-white p-3 md:p-5 rounded-md shadow-md w-full lg:w-1/3">
+          <h2 className="text-lg md:text-2xl font-semibold mb-3">Check Clashes</h2>
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
             <input
               type="text"
               placeholder="Enter Pincode"
@@ -214,37 +216,39 @@ export const TenderDashboard = () => {
             />
             <button
               onClick={handleCheckClashes}
-              className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
+              className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 w-full md:w-auto"
             >
               Check Clashes
             </button>
           </div>
           
           {clashResult && clashResult.clashes && clashResult.clashes.length > 0 && (
-            <div className="bg-white p-5 rounded-md shadow-md mt-2 mb-5">
-              <h3 className="text-2xl font-semibold mb-3">Clash Result:</h3>
-              <table className="table-auto w-full text-left">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">Tender ID</th>
-                    <th className="px-4 py-2">Pincode</th>
-                    <th className="px-4 py-2">Sanction Date</th>
-                    <th className="px-4 py-2">Completion Date</th>
-                    <th className="px-4 py-2">Priority</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {clashResult.clashes.map((clash) => (
-                    <tr key={clash.Tender_ID}>
-                      <td className="border px-4 py-2">{clash.Tender_ID}</td>
-                      <td className="border px-4 py-2">{clash.pincode}</td>
-                      <td className="border px-4 py-2">{new Date(clash.Sanction_Date).toLocaleDateString()}</td>
-                      <td className="border px-4 py-2">{new Date(clash.Completion_Date).toLocaleDateString()}</td>
-                      <td className="border px-4 py-2">{clash.Priorities}</td>
+            <div className="bg-white p-3 md:p-5 rounded-md shadow-md mt-2">
+              <h3 className="text-lg md:text-2xl font-semibold mb-3">Clash Result:</h3>
+              <div className="overflow-x-auto">
+                <table className="table-auto w-full text-left">
+                  <thead>
+                    <tr>
+                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Tender ID</th>
+                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Pincode</th>
+                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Sanction Date</th>
+                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Completion Date</th>
+                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Priority</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {clashResult.clashes.map((clash) => (
+                      <tr key={clash.Tender_ID}>
+                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{clash.Tender_ID}</td>
+                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{clash.pincode}</td>
+                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{new Date(clash.Sanction_Date).toLocaleDateString()}</td>
+                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{new Date(clash.Completion_Date).toLocaleDateString()}</td>
+                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{clash.Priorities}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
