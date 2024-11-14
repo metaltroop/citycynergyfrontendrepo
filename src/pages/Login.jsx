@@ -1,9 +1,9 @@
-// Login.jsx
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import mhlogo from "../assets/mhgovlogo.png";
 import axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +13,7 @@ export const Login = () => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
   const navigate = useNavigate();
   const recaptcha = useRef(null);
 
@@ -87,13 +88,25 @@ export const Login = () => {
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 pt-6 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onFocus={() => setPasswordFocused(true)}
                 onBlur={(e) => setPasswordFocused(e.target.value !== "")}
               />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
             
             <div className="flex items-center justify-between mb-6">
@@ -108,8 +121,6 @@ export const Login = () => {
               </label>
             </div>
 
-            
-            
             <button
               type="submit"
               className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 mb-4"
@@ -121,7 +132,6 @@ export const Login = () => {
                 sitekey={import.meta.env.VITE_SITE_KEY}
                 onChange={onCaptchaChange}
                 ref={recaptcha}
-              
               />
             </div>
             {error && <p className="text-red-500">{error}</p>}

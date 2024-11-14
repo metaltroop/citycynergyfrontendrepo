@@ -11,16 +11,14 @@ export const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [emailFocused, setemailFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);// Toggle visibility
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Toggle visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle confirm password visibility
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const navigate = useNavigate();
   const [captchaToken, setCaptchaToken] = useState(null);
-
   const recaptcha = useRef(null);
-
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -40,13 +38,14 @@ export const Register = () => {
         email,
         password,
         confirmPassword,
-        captchaToken
+        captchaToken,
       });
       navigate("/login"); // Redirect to login page after successful registration
     } catch (err) {
       setError(err.response?.data?.error || "Registration failed");
     }
   };
+
   const onCaptchaChange = (token) => {
     setCaptchaToken(token);
   };
@@ -82,9 +81,7 @@ export const Register = () => {
             <div className="relative mb-6">
               <label
                 className={`absolute left-2 transition-all duration-200 transform ${
-                  emailFocused
-                    ? "-top-2.5 text-sm bg-white px-1"
-                    : "top-4 text-base"
+                  emailFocused ? "-top-2.5 text-sm bg-white px-1" : "top-4 text-base"
                 } text-gray-500`}
               >
                 Email
@@ -95,8 +92,8 @@ export const Register = () => {
                 className="w-full p-2 pt-6 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setemailFocused(true)}
-                onBlur={(e) => setemailFocused(e.target.value !== "")}
+                onFocus={() => setEmailFocused(true)}
+                onBlur={(e) => setEmailFocused(e.target.value !== "")}
               />
             </div>
 
@@ -104,9 +101,7 @@ export const Register = () => {
             <div className="relative mb-6">
               <label
                 className={`absolute left-2 transition-all duration-200 transform ${
-                  passwordFocused
-                    ? "-top-2.5 text-sm bg-white px-1"
-                    : "top-4 text-base"
+                  passwordFocused ? "-top-2.5 text-sm bg-white px-1" : "top-4 text-base"
                 } text-gray-500`}
               >
                 Password
@@ -154,7 +149,7 @@ export const Register = () => {
                 onFocus={() => setConfirmPasswordFocused(true)}
                 onBlur={(e) => setConfirmPasswordFocused(e.target.value !== "")}
               />
-                            <span
+              <span
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 style={{
                   position: "absolute",
@@ -164,24 +159,23 @@ export const Register = () => {
                   cursor: "pointer",
                 }}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
+
             <div className="flex items-center justify-center">
               <ReCAPTCHA
                 sitekey={import.meta.env.VITE_SITE_KEY}
                 onChange={onCaptchaChange}
                 ref={recaptcha}
-              
               />
-              </div>
-            {/* Display error if passwords do not match */}
+            </div>
+            
             {error && <p className="text-red-500 mb-4">{error}</p>}
-
 
             <button
               type="submit"
-              className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 mb-4"
+              className="w-full py-2 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 mb-4"
             >
               Register
             </button>
