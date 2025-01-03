@@ -30,7 +30,7 @@ export const TenderDashboard = () => {
     
     try {
       setError("");
-      const response = await axios.post("https://citysynergybackend.onrender.com/tender/checkclashes", {
+      const response = await axios.post("https://citysynergybackendpython.onrender.com/check_clashes", {
         pincode,
       });
       
