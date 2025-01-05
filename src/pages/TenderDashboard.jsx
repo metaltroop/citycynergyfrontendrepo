@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 export const TenderDashboard = () => {
   const [tenders, setTenders] = useState([]);
@@ -95,17 +96,51 @@ export const TenderDashboard = () => {
   const indexOfFirstTender = indexOfLastTender - tendersPerPage;
   const currentTenders = tenders.slice(indexOfFirstTender, indexOfLastTender);
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div className="container mx-auto p-3 md:p-5 bg-gray-100 min-h-screen">
-      <h1 className="text-xl md:text-3xl font-semibold text-center text-blue-600 mb-3 md:mb-5">
+<div className="container mx-auto p-3 md:p-5 bg-gray-100 min-h-screen">
+      <motion.h1
+        className="text-xl md:text-3xl font-semibold text-center text-blue-600 mb-3 md:mb-5"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+      >
         Tender Dashboard
-      </h1>
+      </motion.h1>
 
-      {error && <p className="text-red-500 text-center">{error}</p>}
+      {error && (
+        <motion.p
+          className="text-red-500 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {error}
+        </motion.p>
+      )}
 
-      <div className="flex flex-col lg:flex-row gap-3">
-        <div className="w-full lg:w-2/3">
-          <div className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5">
+      <motion.div
+        className="flex flex-col lg:flex-row gap-3"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+        transition={{ staggerChildren: 0.2 }}
+      >
+        <motion.div
+          className="w-full lg:w-2/3"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+        >
+           {/* Search & Filter Section */}
+           <motion.div
+            className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5"
+            whileHover={{ scale: 1.02 }}
+          >
             <h2 className="text-lg md:text-2xl font-semibold mb-3">
               Search & Filter Tenders
             </h2>
@@ -177,12 +212,16 @@ export const TenderDashboard = () => {
             >
               Search & Filter
             </button>
-          </div>
+            </motion.div>
 
-          <div className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5">
+            <motion.div
+            className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5"
+            whileHover={{ scale: 1.02 }}
+          >
             <h2 className="text-lg md:text-2xl font-semibold mb-3">
               Tenders List
             </h2>
+
             <div className="overflow-x-auto">
               <table className="table-auto w-full text-left">
                 <thead>
@@ -231,10 +270,13 @@ export const TenderDashboard = () => {
                 Next
               </button>
             </div>
-          </div>
-        </div>
+            </motion.div>
+            </motion.div>
 
-        <div className="bg-white p-3 md:p-5 rounded-md shadow-md w-full lg:w-1/3">
+            <motion.div
+          className="bg-white p-3 md:p-5 rounded-md shadow-md w-full lg:w-1/3"
+          whileHover={{ scale: 1.02 }}
+        >
           <h2 className="text-lg md:text-2xl font-semibold mb-3">
             Check Clashes
           </h2>
@@ -345,8 +387,8 @@ export const TenderDashboard = () => {
               )}
             </div>
           )}
-        </div>
-      </div>
+       </motion.div>
+       </motion.div>
     </div>
   );
 };
