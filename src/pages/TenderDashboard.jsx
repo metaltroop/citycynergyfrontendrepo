@@ -6,7 +6,13 @@ export const TenderDashboard = () => {
   const [error, setError] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterColumns, setFilterColumns] = useState(["Tender_ID", "Tender_By_Location", "Tender_By_Department", "Tender_By_Classification", "Tender_Status"]);
+  const [filterColumns, setFilterColumns] = useState([
+    "Tender_ID",
+    "Tender_By_Location",
+    "Tender_By_Department",
+    "Tender_By_Classification",
+    "Tender_Status",
+  ]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tendersPerPage] = useState(10);
   const [pincode, setPincode] = useState("");
@@ -15,10 +21,12 @@ export const TenderDashboard = () => {
   const loadAllTenders = async () => {
     try {
       setError("");
-      const response = await axios.get("https://citysynergybackend.onrender.com/tender/tenders");
+      const response = await axios.get(
+        "https://citysynergybackend.onrender.com/tender/tenders"
+      );
       setTenders(response.data);
     } catch (err) {
-      setError("Failed to load tenders",err);
+      setError("Failed to load tenders", err);
     }
   };
 
@@ -27,16 +35,19 @@ export const TenderDashboard = () => {
       setError("Please enter a pincode");
       return;
     }
-    
+
     try {
       setError("");
-      const response = await axios.post("https://citysynergybackendpython.onrender.com/check_clashes", {
-        pincode,
-      });
-      
+      const response = await axios.post(
+        "https://citysynergybackendpython.onrender.com/check_clashes",
+        {
+          pincode,
+        }
+      );
+
       if (response.data && response.data.clashes) {
         const sortedClashes = [...response.data.clashes].sort((a, b) => {
-          const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
+          const priorityOrder = { High: 1, Medium: 2, Low: 3 };
           return priorityOrder[a.Priorities] - priorityOrder[b.Priorities];
         });
         setClashResult({ ...response.data, clashes: sortedClashes });
@@ -44,21 +55,24 @@ export const TenderDashboard = () => {
         setClashResult(response.data);
       }
     } catch (err) {
-      setError("Failed to check clashes",err);
+      setError("Failed to check clashes", err);
     }
   };
 
   const handleSearchAndFilter = async () => {
     try {
       setError("");
-      const response = await axios.post("https://citysynergybackend.onrender.com/tender/tenders/filter", {
-        search_by: searchBy,
-        search_term: searchTerm,
-        filter_columns: filterColumns,
-      });
+      const response = await axios.post(
+        "https://citysynergybackend.onrender.com/tender/tenders/filter",
+        {
+          search_by: searchBy,
+          search_term: searchTerm,
+          filter_columns: filterColumns,
+        }
+      );
       setTenders(response.data);
     } catch (err) {
-      setError("Search and filter failed",err);
+      setError("Search and filter failed", err);
     }
   };
 
@@ -83,14 +97,18 @@ export const TenderDashboard = () => {
 
   return (
     <div className="container mx-auto p-3 md:p-5 bg-gray-100 min-h-screen">
-      <h1 className="text-xl md:text-3xl font-semibold text-center text-blue-600 mb-3 md:mb-5">Tender Dashboard</h1>
+      <h1 className="text-xl md:text-3xl font-semibold text-center text-blue-600 mb-3 md:mb-5">
+        Tender Dashboard
+      </h1>
 
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       <div className="flex flex-col lg:flex-row gap-3">
         <div className="w-full lg:w-2/3">
           <div className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5">
-            <h2 className="text-lg md:text-2xl font-semibold mb-3">Search & Filter Tenders</h2>
+            <h2 className="text-lg md:text-2xl font-semibold mb-3">
+              Search & Filter Tenders
+            </h2>
 
             <div className="flex flex-col space-y-3">
               <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
@@ -103,7 +121,9 @@ export const TenderDashboard = () => {
                   <option value="Tender_ID">Tender ID</option>
                   <option value="Tender_By_Location">Location</option>
                   <option value="Tender_By_Department">Department</option>
-                  <option value="Tender_By_Classification">Classification</option>
+                  <option value="Tender_By_Classification">
+                    Classification
+                  </option>
                   <option value="Tender_Status">Status</option>
                 </select>
                 <input
@@ -146,7 +166,9 @@ export const TenderDashboard = () => {
                     </div>
                   ))}
                 </div>
-                <p className="mt-2 text-gray-500 text-sm">You can select up to 5 columns to display in the table.</p>
+                <p className="mt-2 text-gray-500 text-sm">
+                  You can select up to 5 columns to display in the table.
+                </p>
               </div>
             </div>
             <button
@@ -156,15 +178,20 @@ export const TenderDashboard = () => {
               Search & Filter
             </button>
           </div>
-          
+
           <div className="bg-white p-3 md:p-5 rounded-md shadow-md mb-5">
-            <h2 className="text-lg md:text-2xl font-semibold mb-3">Tenders List</h2>
+            <h2 className="text-lg md:text-2xl font-semibold mb-3">
+              Tenders List
+            </h2>
             <div className="overflow-x-auto">
               <table className="table-auto w-full text-left">
                 <thead>
                   <tr>
                     {filterColumns.map((column) => (
-                      <th key={column} className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                      <th
+                        key={column}
+                        className="px-2 md:px-4 py-2 text-xs md:text-sm"
+                      >
                         {column.replace(/_/g, " ")}
                       </th>
                     ))}
@@ -174,7 +201,10 @@ export const TenderDashboard = () => {
                   {currentTenders.map((tender) => (
                     <tr key={tender.Tender_ID}>
                       {filterColumns.map((column) => (
-                        <td key={`${tender.Tender_ID}-${column}`} className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                        <td
+                          key={`${tender.Tender_ID}-${column}`}
+                          className="border px-2 md:px-4 py-2 text-xs md:text-sm"
+                        >
                           {tender[column]}
                         </td>
                       ))}
@@ -183,7 +213,7 @@ export const TenderDashboard = () => {
                 </tbody>
               </table>
             </div>
-            
+
             <div className="flex justify-between items-center mt-4">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
@@ -205,7 +235,9 @@ export const TenderDashboard = () => {
         </div>
 
         <div className="bg-white p-3 md:p-5 rounded-md shadow-md w-full lg:w-1/3">
-          <h2 className="text-lg md:text-2xl font-semibold mb-3">Check Clashes</h2>
+          <h2 className="text-lg md:text-2xl font-semibold mb-3">
+            Check Clashes
+          </h2>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
             <input
               type="text"
@@ -221,34 +253,96 @@ export const TenderDashboard = () => {
               Check Clashes
             </button>
           </div>
-          
-          {clashResult && clashResult.clashes && clashResult.clashes.length > 0 && (
-            <div className="bg-white p-3 md:p-5 rounded-md shadow-md mt-2">
-              <h3 className="text-lg md:text-2xl font-semibold mb-3">Clash Result:</h3>
-              <div className="overflow-x-auto">
-                <table className="table-auto w-full text-left">
-                  <thead>
-                    <tr>
-                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Tender ID</th>
-                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Pincode</th>
-                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Sanction Date</th>
-                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Completion Date</th>
-                      <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Priority</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {clashResult.clashes.map((clash) => (
-                      <tr key={clash.Tender_ID}>
-                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{clash.Tender_ID}</td>
-                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{clash.pincode}</td>
-                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{new Date(clash.Sanction_Date).toLocaleDateString()}</td>
-                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{new Date(clash.Completion_Date).toLocaleDateString()}</td>
-                        <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">{clash.Priorities}</td>
-                      </tr>
+
+          {clashResult && (
+            <div className="bg-white p-3 md:p-5 rounded-md shadow-md mt-5">
+              <h3 className="text-lg md:text-2xl font-semibold mb-3">
+                Clash Results
+              </h3>
+
+              {clashResult.clashes && clashResult.clashes.length > 0 ? (
+                <>
+                  <div className="overflow-x-auto mb-5">
+                    <table className="table-auto w-full text-left">
+                      <thead>
+                        <tr>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Tender ID
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Clashing Tender ID
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Department
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Clashing Department
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Start Date
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            End Date
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Overlap Days
+                          </th>
+                          <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                            Priority Issue
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {clashResult.clashes.map((clash, index) => (
+                          <tr key={index}>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {clash.tender_id}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {clash.clashing_tender_id}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {clash.department}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {clash.clashing_department}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {new Date(
+                                clash.tender_start_date
+                              ).toLocaleDateString()}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {new Date(
+                                clash.tender_end_date
+                              ).toLocaleDateString()}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {clash.overlap_days}
+                            </td>
+                            <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                              {clash.priority_issue ? "Yes" : "No"}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <h4 className="text-md md:text-lg font-semibold mb-3">
+                    Suggestions
+                  </h4>
+                  <ul className="list-disc ml-5">
+                    {clashResult.suggestions.map((suggestion, index) => (
+                      <li key={index} className="text-xs md:text-sm mb-2">
+                        {suggestion}
+                      </li>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                  </ul>
+                </>
+              ) : (
+                <p className="text-gray-500">No clashes detected.</p>
+              )}
             </div>
           )}
         </div>
