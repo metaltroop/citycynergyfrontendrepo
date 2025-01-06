@@ -297,77 +297,157 @@ export const TenderDashboard = () => {
           </div>
 
           {clashResult && clashResult.clashes_by_local_area && (
-  <div className="bg-white p-3 md:p-5 rounded-md shadow-md mt-5">
-    <h3 className="text-lg md:text-2xl font-semibold mb-3">
-      Clash Results by Local Area
-    </h3>
+            <div className="bg-white p-3 md:p-5 rounded-md shadow-md mt-5">
+              <h3 className="text-lg md:text-2xl font-semibold mb-3">
+                Clash Results by Local Area
+              </h3>
 
-    {Object.keys(clashResult.clashes_by_local_area).map((localArea) => (
-      <div key={localArea} className="mb-5">
-        <h4 className="text-md md:text-lg font-semibold mb-3 text-blue-500">
-          {localArea}
-        </h4>
-        {clashResult.clashes_by_local_area[localArea].length > 0 ? (
-          <div className="overflow-x-auto mb-5">
-            <table className="table-auto w-full text-left">
-              <thead>
-                <tr>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Tender ID</th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
-                    Clashing Tender ID
-                  </th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Department</th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
-                    Clashing Department
-                  </th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Start Date</th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">End Date</th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
-                    Overlap Days
-                  </th>
-                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">Priority Issue</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clashResult.clashes_by_local_area[localArea].map((clash, index) => (
-                  <tr key={index}>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {clash.tender_id}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {clash.clashing_tender_id}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {clash.department}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {clash.clashing_department}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {new Date(clash.tender_start_date).toLocaleDateString()}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {new Date(clash.tender_end_date).toLocaleDateString()}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {clash.overlap_days}
-                    </td>
-                    <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
-                      {clash.priority_issue ? "Yes" : "No"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-gray-500">No clashes detected for this area.</p>
-        )}
-      </div>
-    ))}
-  </div>
-)}
+              {Object.keys(clashResult.clashes_by_local_area).map(
+                (localArea) => {
+                  const tenders = clashResult.clashes_by_local_area[localArea];
 
+                  // Deduplicate tenders
+                  const uniqueTenders = tenders.reduce((acc, tender) => {
+                    const exists = acc.find(
+                      (t) => t.tender_id === tender.tender_id
+                    );
+                    if (!exists) acc.push(tender);
+                    return acc;
+                  }, []);
+
+                  return (
+                    <div key={localArea} className="mb-5">
+                      <h4 className="text-md md:text-lg font-semibold mb-3 text-blue-500">
+                         {localArea}
+                      </h4>
+                      {uniqueTenders.length > 0 ? (
+                        <div>
+                          <div className="overflow-x-auto mb-5">
+                            <table className="table-auto w-full text-left">
+                              <thead>
+                                <tr>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Tender ID
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Clashing Tender ID
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Department
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Clashing Department
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Start Date
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    End Date
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Overlap Days
+                                  </th>
+                                  <th className="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                    Priority Issue
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {tenders
+                                  .sort(
+                                    (a, b) =>
+                                      b.overlap_days - a.overlap_days ||
+                                      a.priority_issue - b.priority_issue
+                                  )
+                                  .map((clash, index) => (
+                                    <tr key={index}>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {clash.tender_id}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {clash.clashing_tender_id}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {clash.department}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {clash.clashing_department}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {new Date(
+                                          clash.tender_start_date
+                                        ).toLocaleDateString()}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {new Date(
+                                          clash.tender_end_date
+                                        ).toLocaleDateString()}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {clash.overlap_days}
+                                      </td>
+                                      <td className="border px-2 md:px-4 py-2 text-xs md:text-sm">
+                                        {clash.priority_issue ? "Yes" : "No"}
+                                      </td>
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Horizontal Timeline */}
+                          <div className="mt-5">
+                            <h4 className="text-md md:text-lg font-semibold mb-3">
+                            Suggested  Reordered Timeline
+                            </h4>
+                            <div className="flex items-center justify-center overflow-x-auto">
+                              {(() => {
+                                // Extract the tender order from suggestions for the current local area
+                                const suggestion = clashResult.suggestions.find(
+                                  (s) => s.includes(localArea)
+                                );
+                                const tenderOrder = suggestion
+                                  ? suggestion.match(/TND\d+/g) // Extract tender IDs (e.g., TND001, TND002)
+                                  : [];
+
+                                return tenderOrder.map((tenderId, i) => (
+                                  <div
+                                    key={i}
+                                    className="flex flex-col items-center mx-5 relative"
+                                  >
+                                    <div className="bg-blue-500 text-white text-xs md:text-sm font-semibold w-8 h-8 md:w-16 md:h-10 rounded-full flex items-center justify-center">
+                                      {tenderId}
+                                    </div>
+                                    <p className="mt-2 text-xs md:text-sm">
+                                      {new Date(
+                                        clashResult.clashes_by_local_area[
+                                          localArea
+                                        ].find(
+                                          (clash) =>
+                                            clash.tender_id === tenderId
+                                        )?.tender_end_date
+                                      ).toLocaleDateString()}
+                                    </p>
+                                    {i !== tenderOrder.length - 1 && (
+                                      <div className="absolute top-4 left-full h-1 w-16 bg-gray-300" />
+                                    )}
+                                  </div>
+                                ));
+                              })()}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">
+                          No clashes detected for this area.
+                        </p>
+                      )}
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </div>
