@@ -9,7 +9,7 @@ export const TenderDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterColumns, setFilterColumns] = useState([
     "Tender_ID",
-    "Tender_By_Location",
+    "local_area_name",
     "Tender_By_Department",
     "Tender_By_Classification",
     "Tender_Status",
@@ -154,7 +154,11 @@ export const TenderDashboard = () => {
                 >
                   <option value="">Select Search By</option>
                   <option value="Tender_ID">Tender ID</option>
-                  <option value="Tender_By_Location">Location</option>
+                  <option value="local_area_name">Location</option>
+                  <option value="area_name">Location</option>
+                  <option value="city">Location</option>
+                  <option value="state">Location</option>
+
                   <option value="Tender_By_Department">Department</option>
                   <option value="Tender_By_Classification">
                     Classification
@@ -174,7 +178,6 @@ export const TenderDashboard = () => {
                 <div className="max-h-40 overflow-y-scroll">
                   {[
                     "Tender_ID",
-                    "Tender_By_Location",
                     "Tender_By_Department",
                     "Tender_By_Classification",
                     "Sanction_Date",
@@ -187,7 +190,11 @@ export const TenderDashboard = () => {
                     "Tender_Status",
                     "Reason_for_Status",
                     "Completed_Pending",
-                    "Tender_Acquired_By_Agency",
+                    "Tender_Acquired_By_Agency",                   
+                    "state",
+                    "local_area_name",
+                    "area_name",
+                    "city",
                     "pincode",
                   ].map((column) => (
                     <div key={column} className="flex items-center space-x-2">
