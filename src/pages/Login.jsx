@@ -26,7 +26,7 @@ export const Login = () => {
     }
 
     try {
-      const response = await axios.post("https://citysynergybackend.onrender.com/auth/login", {
+      const response = await axios.post("https://citysynergybackend-jw8z.onrender.com/auth/login", {
         email,
         password,
         rememberMe,

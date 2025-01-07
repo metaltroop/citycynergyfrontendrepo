@@ -34,7 +34,7 @@ export const Register = () => {
     }
 
     try {
-      await axios.post("https://citysynergybackend.onrender.com/auth/register", {
+      await axios.post("https://citysynergybackend-jw8z.onrender.com/auth/register", {
         email,
         password,
         confirmPassword,

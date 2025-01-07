@@ -23,7 +23,7 @@ export const TenderDashboard = () => {
     try {
       setError("");
       const response = await axios.get(
-        "https://citysynergybackend.onrender.com/tender/tenders"
+        "https://citysynergybackend-jw8z.onrender.com/tender/tenders"
       );
       setTenders(response.data);
     } catch (err) {
@@ -64,7 +64,7 @@ export const TenderDashboard = () => {
     try {
       setError("");
       const response = await axios.post(
-        "https://citysynergybackend.onrender.com/tender/tenders/filter",
+        "https://citysynergybackend-jw8z.onrender.com/tender/tenders/filter",
         {
           search_by: searchBy,
           search_term: searchTerm,
