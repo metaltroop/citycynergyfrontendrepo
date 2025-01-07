@@ -154,10 +154,10 @@ export const TenderDashboard = () => {
                 >
                   <option value="">Select Search By</option>
                   <option value="Tender_ID">Tender ID</option>
-                  <option value="local_area_name">Location</option>
-                  <option value="area_name">Location</option>
-                  <option value="city">Location</option>
-                  <option value="state">Location</option>
+                  <option value="local_area_name">local_area_name</option>
+                  <option value="area_name">area_name</option>
+                  <option value="city">city</option>
+                  <option value="state">state</option>
 
                   <option value="Tender_By_Department">Department</option>
                   <option value="Tender_By_Classification">
