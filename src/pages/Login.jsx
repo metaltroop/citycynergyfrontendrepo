@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import mhlogo from "../assets/mhgovlogo.png";
 import axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useLoading } from "../context/LoadingContext";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,9 +14,10 @@ export const Login = () => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const recaptcha = useRef(null);
+  const { setIsLoading } = useLoading();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,6 +28,7 @@ export const Login = () => {
     }
 
     try {
+      setIsLoading(true);
       const response = await axios.post("https://citysynergybackend-jw8z.onrender.com/auth/login", {
         email,
         password,
@@ -34,9 +37,11 @@ export const Login = () => {
       });
       
       localStorage.setItem("token", response.data.token);
-      navigate("/dashboard"); // Navigate to dashboard or home page after login
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Link as ScrollLink } from "react-scroll";
 import axios from "axios";
+import { useLoading } from "../context/LoadingContext";
+
 import AsyncSelect from "react-select/async";
 import "./home.css";
 
@@ -13,6 +15,7 @@ export const Home = () => {
   const [tenders, setTenders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { setIsLoading } = useLoading();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +29,7 @@ export const Home = () => {
     if (!pincode) return [];
     setError(null);
     try {
+      setIsLoading(true);
       const response = await axios.post(`https://citysynergybackend-jw8z.onrender.com/tender/tenders/filter`, {
         search_by: "pincode",
         search_term: pincode,
@@ -44,6 +48,8 @@ export const Home = () => {
       console.error("Error fetching areas:", error);
       setError("Failed to fetch areas. Please try again.");
       return [];
+    } finally{
+      setIsLoading(false);
     }
   };
 
@@ -51,6 +57,7 @@ export const Home = () => {
     if (!pincode || !selectedArea) return [];
     setError(null);
     try {
+      setIsLoading(true);
       const response = await axios.post(`https://citysynergybackend-jw8z.onrender.com/tender/tenders/filter`, {
         search_by: "area_name",
         search_term: selectedArea.value,
@@ -69,6 +76,8 @@ export const Home = () => {
       console.error("Error fetching local areas:", error);
       setError("Failed to fetch local areas. Please try again.");
       return [];
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -82,6 +91,7 @@ export const Home = () => {
     setLoading(true);
     setError(null);
     try {
+      setIsLoading(true);
       const response = await axios.post(`https://citysynergybackend-jw8z.onrender.com/tender/tenders/filter`, {
         search_by: "pincode",
         search_term: pincode,
@@ -100,7 +110,7 @@ export const Home = () => {
       setError("Failed to fetch tenders. Please try again.");
       setTenders([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
   
@@ -110,111 +120,90 @@ export const Home = () => {
   return (
     <div>
       <Navbar sticky={sticky} />
-      {/* Section 1 */}
+      {/* Hero Section */}
       <section
         id="home"
-        className="bgimg h-screen flex items-center justify-center relative"
+        className="bgimg min-h-screen flex items-center justify-center relative"
       >
         <div className="overlay"></div>
-        <div className="text-center z-10">
-          <h1 className="text-[150px] font-semibold text-white">
+        <div className="text-center z-10 px-4">
+          <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[150px] font-semibold text-white transition-all">
             CITY SYNERGY
           </h1>
-          <p className="text-lg text-white mt-2">
+          <p className="text-base sm:text-lg text-white mt-2">
             The Inter Departmental Co-Operation Software.
           </p>
         </div>
-        {/* Floating Button */}
         <ScrollLink
           to="knowtenders"
           smooth={true}
           duration={500}
-          className="absolute bottom-8 right-8 bg-blue-500 z-10 text-white font-bold py-3 px-5 rounded-full shadow-lg cursor-pointer hover:bg-blue-700"
+          className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 bg-blue-500 z-10 text-white font-bold py-2 px-4 sm:py-3 sm:px-5 rounded-full shadow-lg cursor-pointer hover:bg-blue-700 text-sm sm:text-base"
         >
           Know Tenders in Your Area
         </ScrollLink>
       </section>
 
-      {/* Section 2 */}
-  
-      <section id="about" className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Content Side */}
-          <div className="space-y-8">
+      {/* About Section */}
+      <section id="about" className="py-12 sm:py-16 md:py-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="space-y-6 sm:space-y-8">
             <span className="text-blue-500 font-medium tracking-wide">
               About Us
             </span>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              What is CitySynergy ?<br className="hidden md:block" />
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+              What is CitySynergy?
             </h2>
 
             <p className="text-gray-600 leading-relaxed">
-              Every great city thrives on collaboration, and we're here to make
+              Every great city thrives on collaboration, and we&apos;re here to make
               it seamless. Our platform is the bridge between innovation and
               coordination, connecting departments to transform urban governance
               into a powerhouse of efficiency and progress.
             </p>
 
             <div className="text-gray-900">
-              <span className="font-medium">Basically Inter-Departmental Co-operation software  </span>
-              <a
-                href=""
-                className="text-blue-500 hover:text-blue-200 transition-colors"
-              >
-                .
-              </a>
+              <span className="font-medium">
+                Basically Inter-Departmental Co-operation software
+              </span>
+              <a href="" className="text-blue-500 hover:text-blue-200 transition-colors">.</a>
             </div>
 
-            <button  className="group relative px-8 py-3 border-2 border-blue-500 text-gray-900 font-medium hover:bg-blue-500 hover:text-white transition-all duration-300">
+            <button className="group relative px-6 sm:px-8 py-2 sm:py-3 border-2 border-blue-500 text-gray-900 font-medium hover:bg-blue-500 hover:text-white transition-all duration-300">
               Read More
               <span className="absolute -bottom-2 -right-2 w-full h-full border-2 border-gray-200 -z-10 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform duration-300"></span>
             </button>
           </div>
 
-          {/* Image Side */}
-          <div className="relative">
+          <div className="relative mt-8 lg:mt-0">
             <div className="relative">
               <img
                 src="./banner.png"
                 alt="Modern Interior"
                 className="w-full h-full object-cover rounded-sm"
               />
-              {/* Border decoration */}
-              <div className="absolute  w-full h-full top-4 left-4 -z-10"></div>
-
-              {/* Experience Counter
-              <div className="absolute -bottom-10 left-10 bg-white p-6 shadow-xl">
-                <div className="flex items-end gap-4">
-                  <span className="text-6xl font-bold text-amber-500">5</span>
-                  <div className="text-gray-900 font-medium leading-tight">
-                    Years
-                    <br />
-                    Experience
-                    <br />
-                    Working
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
       </section>
-     {/* Search Section */}
-     <section id="knowtenders" className="bg-gray-100 py-20">
+
+      {/* Search Section */}
+      <section id="knowtenders" className="bg-gray-100 py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-semibold text-center mb-8">Know Tenders in Your Area</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6 sm:mb-8">
+            Know Tenders in Your Area
+          </h2>
           
-          {/* Search Form */}
-          <form onSubmit={handleSearch} className="flex flex-row gap-4 items-center justify-center mb-8">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-8">
             <input
               type="text"
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
               placeholder="Enter Pincode"
-              className="w-48 border border-gray-300 rounded-md p-2"
+              className="w-full sm:w-48 border border-gray-300 rounded-md p-2"
             />
-            <div className="w-64">
+            <div className="w-full sm:w-64">
               <AsyncSelect
                 cacheOptions
                 loadOptions={fetchAreas}
@@ -224,7 +213,7 @@ export const Home = () => {
                 noOptionsMessage={() => "No areas found"}
               />
             </div>
-            <div className="w-64">
+            <div className="w-full sm:w-64">
               <AsyncSelect
                 cacheOptions
                 loadOptions={fetchLocalAreas}
@@ -236,54 +225,52 @@ export const Home = () => {
             </div>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md disabled:bg-gray-400"
+              className="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md disabled:bg-gray-400"
               disabled={loading || !pincode || !selectedArea || !selectedLocalArea}
             >
               {loading ? "Searching..." : "Search"}
             </button>
           </form>
 
-          {/* Error Message */}
           {error && (
             <div className="text-red-500 text-center mb-4">
               {error}
             </div>
           )}
 
-          {/* Results Table */}
           {tenders.length > 0 && (
             <div className="overflow-x-auto shadow-lg rounded-lg">
               <table className="min-w-full bg-white">
                 <thead className="bg-[#495057] text-white">
                   <tr>
-                    <th className="p-3 text-left">Tender ID</th>
-                    <th className="p-3 text-left">Department</th>
-                    <th className="p-3 text-left">Classification</th>
-                    <th className="p-3 text-left">Sanction Date</th>
-                    <th className="p-3 text-left">Completion Date</th>
-                    <th className="p-3 text-right">Amount</th>
-                    <th className="p-3 text-center">Duration (Days)</th>
-                    <th className="p-3 text-left">Status</th>
-                    <th className="p-3 text-left">Agency</th>
+                    <th className="p-2 sm:p-3 text-left text-sm sm:text-base">Tender ID</th>
+                    <th className="p-2 sm:p-3 text-left text-sm sm:text-base">Department</th>
+                    <th className="hidden md:table-cell p-2 sm:p-3 text-left text-sm sm:text-base">Classification</th>
+                    <th className="hidden sm:table-cell p-2 sm:p-3 text-left text-sm sm:text-base">Sanction Date</th>
+                    <th className="hidden lg:table-cell p-2 sm:p-3 text-left text-sm sm:text-base">Completion Date</th>
+                    <th className="p-2 sm:p-3 text-right text-sm sm:text-base">Amount</th>
+                    <th className="hidden xl:table-cell p-2 sm:p-3 text-center text-sm sm:text-base">Duration</th>
+                    <th className="hidden sm:table-cell p-2 sm:p-3 text-left text-sm sm:text-base">Status</th>
+                    <th className="hidden md:table-cell p-2 sm:p-3 text-left text-sm sm:text-base">Agency</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {tenders.map((tender) => (
                     <tr key={tender.Tender_ID} className="hover:bg-gray-50">
-                      <td className="p-3">{tender.Tender_ID}</td>
-                      <td className="p-3">{tender.Tender_By_Department}</td>
-                      <td className="p-3">{tender.Tender_By_Classification}</td>
-                      <td className="p-3">{new Date(tender.Sanction_Date).toLocaleDateString()}</td>
-                      <td className="p-3">{new Date(tender.Completion_Date).toLocaleDateString()}</td>
-                      <td className="p-3 text-right">
+                      <td className="p-2 sm:p-3 text-sm">{tender.Tender_ID}</td>
+                      <td className="p-2 sm:p-3 text-sm">{tender.Tender_By_Department}</td>
+                      <td className="hidden md:table-cell p-2 sm:p-3 text-sm">{tender.Tender_By_Classification}</td>
+                      <td className="hidden sm:table-cell p-2 sm:p-3 text-sm">{new Date(tender.Sanction_Date).toLocaleDateString()}</td>
+                      <td className="hidden lg:table-cell p-2 sm:p-3 text-sm">{new Date(tender.Completion_Date).toLocaleDateString()}</td>
+                      <td className="p-2 sm:p-3 text-sm text-right">
                         {new Intl.NumberFormat('en-IN', {
                           style: 'currency',
                           currency: 'INR'
                         }).format(tender.Sanction_Amount)}
                       </td>
-                      <td className="p-3 text-center">{tender.Total_Duration_Days}</td>
-                      <td className="p-3">{tender.Tender_Status}</td>
-                      <td className="p-3">{tender.Tender_Acquired_By_Agency}</td>
+                      <td className="hidden xl:table-cell p-2 sm:p-3 text-sm text-center">{tender.Total_Duration_Days}</td>
+                      <td className="hidden sm:table-cell p-2 sm:p-3 text-sm">{tender.Tender_Status}</td>
+                      <td className="hidden md:table-cell p-2 sm:p-3 text-sm">{tender.Tender_Acquired_By_Agency}</td>
                     </tr>
                   ))}
                 </tbody>

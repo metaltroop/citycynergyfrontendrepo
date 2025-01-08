@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { useLoading } from "../context/LoadingContext";
 
 export const TenderDashboard = () => {
   const [tenders, setTenders] = useState([]);
@@ -18,9 +19,12 @@ export const TenderDashboard = () => {
   const [tendersPerPage] = useState(10);
   const [pincode, setPincode] = useState("");
   const [clashResult, setClashResult] = useState(null);
+  const { setIsLoading } = useLoading(); 
+
 
   const loadAllTenders = async () => {
     try {
+      setIsLoading(true);
       setError("");
       const response = await axios.get(
         "https://citysynergybackend-jw8z.onrender.com/tender/tenders"
@@ -28,6 +32,8 @@ export const TenderDashboard = () => {
       setTenders(response.data);
     } catch (err) {
       setError("Failed to load tenders", err);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -38,6 +44,7 @@ export const TenderDashboard = () => {
     }
 
     try {
+      setIsLoading(true);
       setError("");
       const response = await axios.post(
         "https://citysynergybackendpython.onrender.com/check_clashes",
@@ -57,11 +64,14 @@ export const TenderDashboard = () => {
       }
     } catch (err) {
       setError("Failed to check clashes", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSearchAndFilter = async () => {
     try {
+      setIsLoading(true);
       setError("");
       const response = await axios.post(
         "https://citysynergybackend-jw8z.onrender.com/tender/tenders/filter",
@@ -74,7 +84,9 @@ export const TenderDashboard = () => {
       setTenders(response.data);
     } catch (err) {
       setError("Search and filter failed", err);
-    }
+    }finally {
+      setIsLoading(false);
+     }
   };
 
   useEffect(() => {

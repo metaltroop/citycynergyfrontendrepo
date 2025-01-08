@@ -9,7 +9,7 @@ export default function Navbar({ sticky }) {
         <div className="flex items-center justify-between py-2">
           <div className="flex items-center">
             <img src="./citylogo.png" alt="Logo" className="w-24 h-20" />
-            <h1 className={`text-white text-2xl font-semibold  hover:text-[#343a40] cursor-pointer ${sticky ? "text-[#171a1def] " : "hidden"}`}
+            <h1 className={` text-2xl font-semibold  hover:text-[#343a40] cursor-pointer ${sticky ? "text-gray-800 " : "hidden"}`}
             >City Synergy</h1>
           </div>
 
@@ -18,7 +18,7 @@ export default function Navbar({ sticky }) {
               to="home"
               smooth={true}
               duration={500}
-              className={`text-white font-semibold hover:text-[#343a40] cursor-pointer ${sticky ? "text-[#171a1def]" : ""}`}
+              className={` font-semibold hover:text-[#343a40] cursor-pointer ${sticky ? "text-gray-800" : "text-white"}`}
             >
               Home
             </ScrollLink>
@@ -26,7 +26,7 @@ export default function Navbar({ sticky }) {
               to="about"
               smooth={true}
               duration={500}
-              className={`text-white font-semibold hover:text-[#343a40] cursor-pointer ${sticky ? "text-[#171a1def]" : ""}`}
+              className={` font-semibold hover:text-[#343a40] cursor-pointer ${sticky ? "text-gray-800" : "text-white"}`}
             >
               About
             </ScrollLink>

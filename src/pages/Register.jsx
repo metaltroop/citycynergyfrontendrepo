@@ -5,6 +5,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons
 import ReCAPTCHA from "react-google-recaptcha";
 import mhlogo from "../assets/mhgovlogo.png";
 import axios from "axios";
+import { useLoading } from "../context/LoadingContext";
+
 
 export const Register = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +21,8 @@ export const Register = () => {
   const navigate = useNavigate();
   const [captchaToken, setCaptchaToken] = useState(null);
   const recaptcha = useRef(null);
+  const { setIsLoading } = useLoading();
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -34,7 +38,8 @@ export const Register = () => {
     }
 
     try {
-      await axios.post("https://citysynergybackend-jw8z.onrender.com/auth/register", {
+      setIsLoading(true);
+      await axios.post("http://localhost:3000/auth/register", {
         email,
         password,
         confirmPassword,
@@ -43,6 +48,8 @@ export const Register = () => {
       navigate("/login"); // Redirect to login page after successful registration
     } catch (err) {
       setError(err.response?.data?.error || "Registration failed");
+    }finally{
+      setIsLoading(false);
     }
   };
 
