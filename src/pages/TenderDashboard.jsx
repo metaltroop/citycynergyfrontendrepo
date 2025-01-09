@@ -437,16 +437,7 @@ export const TenderDashboard = () => {
                                     <div className="bg-blue-500 text-white text-xs md:text-sm font-semibold w-8 h-8 md:w-16 md:h-10 rounded-full flex items-center justify-center">
                                       {tenderId}
                                     </div>
-                                    <p className="mt-2 text-xs md:text-sm">
-                                      {new Date(
-                                        clashResult.clashes_by_local_area[
-                                          localArea
-                                        ].find(
-                                          (clash) =>
-                                            clash.tender_id === tenderId
-                                        )?.tender_end_date
-                                      ).toLocaleDateString()}
-                                    </p>
+                             
                                     {i !== tenderOrder.length - 1 && (
                                       <div className="absolute top-4 left-full h-1 w-16 bg-gray-300" />
                                     )}
