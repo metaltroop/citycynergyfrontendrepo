@@ -39,7 +39,7 @@ export const Register = () => {
 
     try {
       setIsLoading(true);
-      await axios.post("http://localhost:3000/auth/register", {
+      await axios.post("https://citysynergybackend-jw8z.onrender.com/auth/register", {
         email,
         password,
         confirmPassword,
